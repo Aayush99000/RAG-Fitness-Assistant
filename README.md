@@ -9,33 +9,9 @@
 
 **An AI-powered fitness assistant using Retrieval Augmented Generation (RAG) to provide personalized workout plans, exercise recommendations, and form guidance.**
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Architecture](#architecture) • [Contributing](#contributing)
 
 </div>
 
----
-
-## 📋 Table of Contents
-
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Examples](#examples)
-- [How It Works](#how-it-works)
-- [Development](#development)
-- [Roadmap](#roadmap)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-
----
 
 ## 🎯 About
 
