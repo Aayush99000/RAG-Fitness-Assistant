@@ -27,13 +27,13 @@ class ExRxScrapper:
             print(f"Error fetching {url}: {e}")
             return None
         
-    def get_muscle_groups(self) -> List[Dict[str, str]]:
+    def get_muscle_groups(self) -> Dict[str, str]:
         """Get all muscle groups from the main page"""
         url = f"{self.base_url}/Lists/Directory"
         soup = self.fetch_page(url)
         if not soup:
             return {}
-        muscle_groups = []
+        muscle_groups = {}
 
         #Find all muscle group links 
         for link in soup.find_all('a', href=True):
@@ -142,21 +142,27 @@ class ExRxScrapper:
         print("==" *30)
 
         #Get muscle group links
-        muscle_groups = dict(list(muscle_groups.items())[:max_muscle_groups])
+        muscle_groups = self.get_muscle_groups()
+        if max_muscle_groups is not None:
+            muscle_groups = dict(list(muscle_groups.items())[:max_muscle_groups])
 
         #Scrap each muscle group
         for i , (group_name , group_url) in enumerate(muscle_groups.items(),1):
-            print(f"\n{i}/len{muscle_groups} Scraping muscle group: {group_name}")
+            print(f"\n{i}/{len(muscle_groups)} Scraping muscle group: {group_name}")
             exercises = self.get_exercises_from_muscle_group(group_url, group_name)
             self.exercises.extend(exercises)
         print(f"\nScraping completed. Total exercises found: {len(self.exercises)}")
 
         return self.exercises
 
-    def save_to_json(self, filename: str):
+    def save_to_json(self, filename: str = "data/raw/exercises.json"):
         """Save exercises to a JSON file"""
+        directory = os.path.dirname(filename)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+
         with open(filename, 'w' , encoding='utf-8')as f:
-            json.dump(self.exercise ,f, indent=2 , ensure_ascii=False)
+            json.dump(self.exercises ,f, indent=2 , ensure_ascii=False)
         print(f"Exercises saved to {filename}")
 
 
