@@ -8,7 +8,7 @@ import re
 
 class ExRxScrapper:
     def __init__(self):
-        self.base_url = "https://exrx.net/robots.txt"
+        self.base_url = "https://exrx.net"
         self.headers = {
             'User-Agent':  'Mozilla/5.0 (Educational Project) AppleWebKit/537.36'
         }
@@ -51,7 +51,7 @@ class ExRxScrapper:
     
     def get_exercises_from_muscle_group(self, url: str , category: str) -> List[Dict] :
         """Get all exercises from a muscle group page"""
-        soup = self.get_page(url)
+        soup = self.fetch_page(url)
 
         if not soup:
             return []
@@ -72,9 +72,9 @@ class ExRxScrapper:
         
         return exercises
     
-    def scrape_exercise_page(self,uurl:str , name:str,category:str) ->Dict:
+    def scrape_exercise_page(self,url:str , name:str,category:str) ->Dict:
         """Scrape individual exercise page"""
-        soup = self.get_page(url)
+        soup = self.fetch_page(url)
         
         if not soup:
             return None
@@ -136,32 +136,33 @@ class ExRxScrapper:
         
         return exercise
 
-def scrap_all(self, max_muscle_groups: int =None):
-    """Scrap all exercises from ExRx"""
-    print("Starting ExRx Scraper..")
-    print("==" *30)
+    def scrap_all(self, max_muscle_groups: int =None):
+        """Scrap all exercises from ExRx"""
+        print("Starting ExRx Scraper..")
+        print("==" *30)
 
-    #Get muscle group links
-    muscle_groups = dict(list(muscle_groups.items())[:max_muscle_groups])
+        #Get muscle group links
+        muscle_groups = dict(list(muscle_groups.items())[:max_muscle_groups])
 
-    #Scrap each muscle group
-    for i , (group_name , group_url) in enumerate(muscle_groups.items(),1):
-        print(f"\n{i}/len(muscle_groups)} Scraping muscle group: {group_name}")
-        exercises = self.get_exercises_from_muscle_group(group_url, group_name)
-        self.exercises.extend(exercises)
-    print(f"\nScraping completed. Total exercises found: {len(self.exercises)}")
+        #Scrap each muscle group
+        for i , (group_name , group_url) in enumerate(muscle_groups.items(),1):
+            print(f"\n{i}/len{muscle_groups} Scraping muscle group: {group_name}")
+            exercises = self.get_exercises_from_muscle_group(group_url, group_name)
+            self.exercises.extend(exercises)
+        print(f"\nScraping completed. Total exercises found: {len(self.exercises)}")
 
-    return self.exercises
+        return self.exercises
 
-def save_to_json(self, filename: str):
-    """Save exercises to a JSON file"""
-    with open(filename, 'w' , encoding='utf-8')as f:
-        json.dump(self.exercise ,f, indent=2 , ensure_ascii=False)
-    print(f"Exercises saved to {filename}")
+    def save_to_json(self, filename: str):
+        """Save exercises to a JSON file"""
+        with open(filename, 'w' , encoding='utf-8')as f:
+            json.dump(self.exercise ,f, indent=2 , ensure_ascii=False)
+        print(f"Exercises saved to {filename}")
+
 
 def main():
     """Main scraping function"""
-    scraper = ExRxScraper()
+    scraper = ExRxScrapper()
     
     # Scrape all (or limit for testing)
     print("Choose an option:")
@@ -172,14 +173,14 @@ def main():
     
     if choice == "1":
         print("\n🧪 Running in TEST mode...")
-        exercises = scraper.scrape_all(max_muscle_groups=3)
+        exercises = scraper.scrap_all(max_muscle_groups=3)
     else:
         print("\n🚀 Running FULL scrape...")
         print("⚠️  This will take 30-60 minutes due to respectful delays")
         confirm = input("Continue? (yes/no): ").strip().lower()
         
         if confirm == 'yes':
-            exercises = scraper.scrape_all()
+            exercises = scraper.scrap_all()
         else:
             print("Cancelled.")
             return
